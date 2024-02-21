@@ -1,23 +1,38 @@
+import PageHome from '@/components/PageHome.vue'
+import PageThreadShow from '@/components/PageThreadShow.vue'
+import PageNotFound from '@/components/PageNotFound.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import sourceData from '@/data.json'
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+const routes = [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+        path: '/',
+        name: 'Home',
+        component: PageHome
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+        path: '/thread/:id',
+        name: 'ThreadShow',
+        component: PageThreadShow,
+        props: true,
+        beforeEnter(to, from, next) {
+            const thread = sourceData.threads.find(thread => thread.id === to.params.id)
+            next(thread ? undefined : {
+                name: 'PageNotFound',
+                params: { pathMatch: to.path.substring(1).split('/') },
+                query: to.query,
+                hash: to.hash
+            })
+        }
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'PageNotFound',
+        component: PageNotFound
     }
-  ]
-})
+]
 
-export default router
+export default createRouter({
+    history: createWebHistory(),
+    routes,
+})
