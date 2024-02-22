@@ -1,14 +1,14 @@
 <template>
   <h1>Welcome to the Forum</h1>
-  <ThreadList :threads="threads"/>
+  <CategoryList :categories="categories"/>
 </template>
 
 <script setup>
 import sourceData from '@/data.json'
 import { ref } from 'vue'
-import ThreadList from '../components/ThreadList.vue'
+import CategoryList from '../components/CategoryList.vue'
 
-const threads = ref(sourceData.threads)
+const categories = ref(sourceData.categories)
 
 </script>
 
